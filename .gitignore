@@ -25,3 +25,7 @@ yarn-error.log*
 # Electron
 /dist
 /out
+
+# Credentials (NEVER commit these!)
+credentials.txt
+C:\Users\msell\Desktop\credentials.txt

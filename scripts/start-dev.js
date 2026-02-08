@@ -25,7 +25,6 @@ function checkReactServer(callback, retries = 0) {
   });
 }
 
-// Start React dev server
 console.log('Starting React dev server...\n');
 reactProcess = spawn('npm', ['start'], {
   cwd: path.join(__dirname, '..'),
