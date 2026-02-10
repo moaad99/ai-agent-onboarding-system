@@ -15,7 +15,7 @@ const ChatHeader = () => {
             </defs>
             <circle cx="18" cy="18" r="16" fill="url(#headerGradient)" opacity="0.2"/>
             <circle cx="18" cy="18" r="14" fill="url(#headerGradient)"/>
-            <path d="M18 10v8m0 0l-4-4m4 4l4-4M14 24h8" stroke="#667eea" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M18 10v8m0 0l-4-4m4 4l4-4M14 24h8" stroke="#0047FF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </div>
         <div className="header-text">

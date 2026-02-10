@@ -40,8 +40,8 @@ const Message = ({ message }) => {
           <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
             <defs>
               <linearGradient id="avatarGradient" x1="0" y1="0" x2="36" y2="36">
-                <stop offset="0%" stopColor="#667eea"/>
-                <stop offset="100%" stopColor="#764ba2"/>
+                <stop offset="0%" stopColor="#0047FF"/>
+                <stop offset="100%" stopColor="#0066FF"/>
               </linearGradient>
             </defs>
             <circle cx="18" cy="18" r="16" fill="url(#avatarGradient)"/>

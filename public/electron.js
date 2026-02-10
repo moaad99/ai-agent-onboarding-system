@@ -30,7 +30,7 @@ function createWindow() {
       partition: 'persist:main' // Isolate from browser extensions
     },
     frame: false,
-    backgroundColor: '#667eea',
+    backgroundColor: '#0047FF',
     show: false,
     resizable: true,
     titleBarStyle: 'hidden'
