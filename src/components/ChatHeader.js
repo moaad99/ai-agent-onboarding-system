@@ -19,7 +19,7 @@ const ChatHeader = () => {
           </svg>
         </div>
         <div className="header-text">
-          <h1 className="header-title">Onboarding Assistant</h1>
+          <h1 className="header-title">Cegid Assistant</h1>
           <p className="header-subtitle">Eurecia × Azure DevOps</p>
         </div>
       </div>
