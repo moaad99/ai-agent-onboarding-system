@@ -5,6 +5,86 @@ const Message = ({ message }) => {
   const isUser = message.type === 'user';
   const isBot = message.type === 'bot';
   
+  // Get IPC renderer for Electron
+  const getIpcRenderer = () => {
+    try {
+      if (typeof window !== 'undefined' && window.require) {
+        const { ipcRenderer } = window.require('electron');
+        return ipcRenderer;
+      }
+    } catch (error) {
+      console.error('Failed to get IPC renderer:', error);
+    }
+    return null;
+  };
+
+  // Handle link click - open in default browser
+  const handleLinkClick = async (e, url) => {
+    e.preventDefault();
+    const ipcRenderer = getIpcRenderer();
+    
+    if (ipcRenderer) {
+      try {
+        await ipcRenderer.invoke('open-external-url', url);
+      } catch (error) {
+        console.error('Error opening URL:', error);
+        // Fallback to window.open if IPC fails
+        window.open(url, '_blank', 'noopener,noreferrer');
+      }
+    } else {
+      // Fallback for non-Electron environments
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
+  
+  // Function to detect and convert URLs to clickable links
+  const linkifyText = (text) => {
+    // URL regex pattern - matches http://, https://, and www. URLs
+    const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9-]+\.[a-zA-Z]{2,}[^\s]*)/g;
+    const parts = [];
+    let lastIndex = 0;
+    let match;
+    let key = 0;
+
+    while ((match = urlRegex.exec(text)) !== null) {
+      // Add text before the URL
+      if (match.index > lastIndex) {
+        parts.push(text.substring(lastIndex, match.index));
+      }
+      
+      // Process the URL
+      let url = match[0];
+      let href = url;
+      
+      // Add protocol if missing
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        href = 'https://' + url;
+      }
+      
+      // Create clickable link
+      parts.push(
+        <a
+          key={`link-${key++}`}
+          href={href}
+          onClick={(e) => handleLinkClick(e, href)}
+          className="message-link"
+        >
+          {url}
+        </a>
+      );
+      
+      lastIndex = match.index + match[0].length;
+    }
+    
+    // Add remaining text after last URL
+    if (lastIndex < text.length) {
+      parts.push(text.substring(lastIndex));
+    }
+    
+    // If no URLs found, return original text
+    return parts.length > 0 ? parts : text;
+  };
+  
   const formatContent = (content) => {
     const lines = content.split('\n');
     return lines.map((line, index) => {
@@ -12,7 +92,7 @@ const Message = ({ message }) => {
       if (line.trim().startsWith('•') || line.trim().startsWith('-')) {
         return (
           <div key={index} className="message-list-item">
-            {line}
+            {linkifyText(line)}
           </div>
         );
       }
@@ -20,13 +100,13 @@ const Message = ({ message }) => {
       if (/^\d+\./.test(line.trim())) {
         return (
           <div key={index} className="message-list-item">
-            {line}
+            {linkifyText(line)}
           </div>
         );
       }
       return (
         <React.Fragment key={index}>
-          {line}
+          {linkifyText(line)}
           {index < lines.length - 1 && <br />}
         </React.Fragment>
       );

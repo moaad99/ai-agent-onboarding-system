@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const isDev = process.env.ELECTRON_IS_DEV === '1' || process.env.NODE_ENV === 'development';
@@ -170,6 +170,20 @@ function createWindow() {
       };
     } catch (error) {
       console.error('Error reading credentials:', error);
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  });
+
+  // Open URL in default browser handler
+  ipcMain.handle('open-external-url', async (event, url) => {
+    try {
+      await shell.openExternal(url);
+      return { success: true };
+    } catch (error) {
+      console.error('Error opening URL:', error);
       return {
         success: false,
         error: error.message
